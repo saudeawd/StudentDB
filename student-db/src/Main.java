@@ -17,7 +17,7 @@ public class Main {
         List<Student> students = new ArrayList<>();
         BufferedReader br = new BufferedReader(new FileReader(filename));
         String line;
-        br.readLine(); // Skip header
+        br.readLine();
         while ((line = br.readLine()) != null) {
             String[] fields = line.split(",");
             if (fields.length == 9) {
@@ -73,7 +73,6 @@ public class Main {
     
     public static long getAccurateMemoryUsage() {
         try {
-            // Даємо час GC стабілізуватися
             System.gc();
             Thread.sleep(100);
             System.gc();
@@ -98,11 +97,9 @@ public class Main {
     }
     
     public static void main(String[] args) throws IOException {
-        // Використовуємо правильне ім'я файлу згідно завдання
         List<Student> students = readCSV("data/students.csv");
         System.out.println("Loaded " + students.size() + " students");
-        
-        // Створюємо підмножини для тестування
+
         List<List<Student>> subsets = Arrays.asList(
             students.subList(0, Math.min(100, students.size())),
             students.subList(0, Math.min(1000, students.size())),
@@ -124,16 +121,14 @@ public class Main {
                 
                 final int dbIndex = i;
                 final int subsetIndex = j;
-                
-                // Точніше вимірювання пам'яті
+
                 long memoryUsed = measureMemoryUsage(() -> {
                     StudentDatabaseV2 db = createDatabase(dbIndex);
                     db.init(new ArrayList<>(subsets.get(subsetIndex)));
                 });
                 
                 System.out.printf("Memory usage: %.2f MB\n", memoryUsed / (1024.0 * 1024.0));
-                
-                // Тестування продуктивності
+
                 StudentDatabaseV2 db = createDatabase(i);
                 db.init(new ArrayList<>(subsets.get(j)));
                 benchmarkOperations(db, subsets.get(j), op1Count, op2Count, op3Count);
@@ -153,8 +148,7 @@ public class Main {
         StudentDBSorter.sortCounting(copy2);
         long countingTime = System.currentTimeMillis() - startTime;
         System.out.println("Counting sort time: " + countingTime + " ms");
-        
-        // Перевірка коректності сортування
+
         boolean correct = true;
         for (int i = 0; i < copy1.size(); i++) {
             Student a = copy1.get(i);
